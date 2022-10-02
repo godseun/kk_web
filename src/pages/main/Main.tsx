@@ -1,8 +1,35 @@
+import { useLayoutEffect } from "react";
+
 import styled, { css } from "styled-components";
+import { useAppDispatch, useAppSelector } from "modules/hooks";
+import { reload } from "modules/slice/asyncTestSlice";
 
 const Main = () => {
-  console.log("Main");
-  return <Container>Main</Container>;
+  const { userData } = useAppSelector((state) => state.aTest);
+  const dispatch = useAppDispatch();
+
+  useLayoutEffect(() => {
+    console.log("main effect ", userData);
+    dispatch(reload({ action: "getADList" }));
+  }, []);
+
+  return (
+    <Container
+      onClick={(e) => {
+        e.preventDefault();
+      }}
+    >
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          console.log(userData);
+        }}
+      >
+        Click!
+      </button>
+      Main
+    </Container>
+  );
 };
 
 export default Main;
