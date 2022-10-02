@@ -4,19 +4,21 @@ type InitialState = {
   numOfCakes: number;
 };
 
-export const initialState: InitialState = {
+const initialState: InitialState = {
   numOfCakes: 0,
 };
 
-export const testSlice = createSlice({
+const testSlice = createSlice({
   name: "cafe",
   initialState,
   reducers: {
     ordered: (state) => {
       state.numOfCakes--;
+      console.log(state.numOfCakes);
     },
     restocked: (state, action) => {
       state.numOfCakes += action.payload;
+      console.log(state.numOfCakes);
     },
   },
 });
