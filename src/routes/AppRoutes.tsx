@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import { useMediaQuery } from "react-responsive";
 
 import MykiikeyRoutes from "routes/MykiikeyRoutes";
@@ -9,8 +10,8 @@ import BaseLayout from "pages/BaseLayout";
 
 const AppRoutes = () => {
   const isMobile = useMediaQuery({ maxWidth: "768px" });
+  console.log("app routes" + isMobile);
 
-  console.log("app routes : ", isMobile);
   return (
     <BrowserRouter>
       <Routes>

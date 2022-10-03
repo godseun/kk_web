@@ -7,8 +7,22 @@ interface MyKnownError {
   errorMessage: string;
 }
 
+type UserData = {
+  adList: Array<Object>;
+  gameList: Array<Object>;
+  isLogin: boolean;
+  mbName: string;
+  myPoint: number;
+  playCnt: number;
+  totalPlayCnt: number;
+  viewCnt: number;
+  totalViewCnt: number;
+};
+
 interface fetchActionType {
   success: boolean;
+  data: UserData;
+  msg: string | null;
 }
 
 export const reload = createAsyncThunk<
@@ -18,7 +32,10 @@ export const reload = createAsyncThunk<
 >("contents/reload", async (dto, thunkAPI) => {
   try {
     // success 객체가 들어올 것으로 예상됨.
-    const { data } = await customAxios.post(AD_URL, dto);
+    const { data } = await customAxios.post(AD_URL, {
+      ...dto,
+      action: "getADList",
+    });
     return data;
   } catch (err) {
     return thunkAPI.rejectWithValue({
@@ -28,50 +45,59 @@ export const reload = createAsyncThunk<
 });
 
 export interface InitailStateType {
-  userData: object;
+  userData: UserData;
   error: null | MyKnownError | undefined;
   loading: boolean;
 }
 
 const initialState: InitailStateType = {
-  userData: {},
+  userData: {
+    adList: [],
+    gameList: [],
+    isLogin: false,
+    mbName: "솜솜",
+    myPoint: 7777777,
+    playCnt: 0,
+    totalPlayCnt: 0,
+    viewCnt: 0,
+    totalViewCnt: 0,
+  },
   error: null,
   loading: false,
 };
 
-export const aTestSlice = createSlice({
+export const adSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     // ... //
-    getADList: (state) => {
-      console.log(state.userData);
+    removeAd: (state) => {
+      console.log("removeAd: ", state.userData);
     },
   },
   extraReducers: (builder) => {
     builder
       // 통신 중
       .addCase(reload.pending, (state) => {
-        console.log("async test pending : ", state);
         state.error = null;
         state.loading = true;
       })
       // 통신 성공
       .addCase(reload.fulfilled, (state, { payload }) => {
-        console.log("async test fulfilled : ", state, payload);
-        state.error = null;
-        state.loading = false;
-        state.userData = payload;
+        if (payload.success) {
+          state.error = null;
+          state.loading = false;
+          state.userData = payload.data;
+        }
       })
       // 통신 에러
       .addCase(reload.rejected, (state, { payload }) => {
-        console.log("async test rejected : ", state, payload);
         state.error = payload;
         state.loading = false;
       });
   },
 });
 
-export const {} = aTestSlice.actions;
+export const {} = adSlice.actions;
 
-export default aTestSlice.reducer;
+export default adSlice.reducer;

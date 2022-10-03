@@ -1,33 +1,42 @@
 import { useLayoutEffect } from "react";
 
-import styled, { css } from "styled-components";
+import { reload } from "modules/slice/adSlice";
 import { useAppDispatch, useAppSelector } from "modules/hooks";
-import { reload } from "modules/slice/asyncTestSlice";
+
+import styled, { css } from "styled-components";
 
 const Main = () => {
-  const { userData } = useAppSelector((state) => state.aTest);
+  const { userData } = useAppSelector((state) => state.ads);
+
+  const { adList, gameList } = userData;
+
   const dispatch = useAppDispatch();
 
   useLayoutEffect(() => {
     console.log("main effect ", userData);
-    dispatch(reload({ action: "getADList" }));
+    dispatch(reload({}));
   }, []);
 
   return (
-    <Container
-      onClick={(e) => {
-        e.preventDefault();
-      }}
-    >
+    <Container>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          console.log("adList : ", adList);
+          console.log("gameList : ", gameList);
+        }}
+      >
+        Object Click!
+      </button>
+      Main
       <button
         onClick={(e) => {
           e.preventDefault();
           console.log(userData);
         }}
       >
-        Click!
+        UserData Click!
       </button>
-      Main
     </Container>
   );
 };
